@@ -1,0 +1,81 @@
+CREATE TABLE Sailors (
+    sid INTEGER NOT NULL,
+    sname VARCHAR(32),
+    rating INTEGER,
+    age REAL,
+    CONSTRAINT PK_sailors PRIMARY KEY (sid)
+);
+ 
+CREATE TABLE Boats (
+    bid INTEGER NOT NULL,
+    bname VARCHAR(32),
+    color VARCHAR(32),
+    CONSTRAINT PK_boats PRIMARY KEY (bid)
+);
+ 
+CREATE TABLE Reserves (
+    sid INTEGER NOT NULL,
+    bid INTEGER NOT NULL,
+    day DATE NOT NULL,
+    CONSTRAINT PK_reserves PRIMARY KEY (sid, bid, day),
+    FOREIGN KEY (sid) REFERENCES Sailors(sid),
+    FOREIGN KEY (bid) REFERENCES Boats(bid)
+);
+ 
+ 
+ 
+(i) Find all information of sailors who have reserved boat number 101.
+i)SELECT s.*
+FROM Sailors s
+JOIN Reserves r ON s.sid = r.sid
+WHERE r.bid = 101;
+ 
+ 
+ 
+(ii) Find the names of sailors who have reserved a red boat, and list in the order of age.
+ii)SELECT DISTINCT s.sname
+FROM Sailors s
+JOIN Reserves r ON s.sid = r.sid
+JOIN Boats b ON r.bid = b.bid
+WHERE b.color = 'red'
+ORDER BY s.age;
+ 
+ 
+ 
+(iii) Find the ids of sailors who have reserved a red boat or a green boat.
+iii)SELECT DISTINCT s.sid
+FROM Sailors s
+JOIN Reserves r ON s.sid = r.sid
+JOIN Boats b ON r.bid = b.bid
+WHERE b.color = 'red' OR b.color = 'green';
+ 
+ 
+ 
+(iv) Find the names of sailors who have reserved boat 103.
+iv)SELECT s.sname
+FROM Sailors s
+JOIN Reserves r ON s.sid = r.sid
+WHERE r.bid = 103;
+ 
+ 
+ 
+(v) Find the name and the age of the youngest sailor.
+v)SELECT s.sname, s.age
+FROM Sailors s
+ORDER BY s.age ASC
+LIMIT 1;
+ 
+ 
+ 
+(vi) Find the average age of sailors for each rating level.
+vi)SELECT rating, AVG(age) AS average_age
+FROM Sailors
+GROUP BY rating;
+ 
+ 
+ 
+(vii) Find the average age of sailors for each rating level that has at least two sailors
+vii)SELECT rating, AVG(age) AS average_age
+FROM Sailors
+GROUP BY rating
+HAVING COUNT(*) >= 2;
